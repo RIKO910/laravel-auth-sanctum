@@ -1,20 +1,30 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Http\Requests\LoginRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
-        $request->validate([
-            'email' => 'required|email|string',
-            'password' => 'required|min:4|string',
-        ]);
 
-
-        return "Eshe porsi";
-
+        $credentials = [
+            'email' => $request->email,
+            'password' => $request->password,
+        ];
+        if(!Auth::attempt($credentials, true)){
+            return response()->json([
+                'error' => 'The provided credential are not correct'
+            ], 422);
     }
+    $user =Auth::user();
+    $token = $user ->createToken('instructory')->plainTextToken;
+
+    return response()->json([
+        'user' =>$user,
+        'token'=>$token,
+    ]);
+}
 }
