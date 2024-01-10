@@ -3,7 +3,7 @@
 use App\Http\Controllers\LoginController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
+use App\Models\User;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -16,6 +16,10 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::post('/login', [LoginController::class,'login']);
+
+Route::get("/users",function(){
+    return User::whereYear('created_at', 2022)->count();
+});
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
